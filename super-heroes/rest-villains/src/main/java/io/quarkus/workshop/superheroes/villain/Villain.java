@@ -1,0 +1,42 @@
+package io.quarkus.workshop.superheroes.villain;
+
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.smallrye.common.constraint.NotNull;
+import jakarta.persistence.Entity;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
+import jakarta.persistence.Column;
+
+import java.util.Random;
+
+@Entity
+public class Villain extends PanacheEntity {
+
+    @NotNull
+    @Size(min = 3, max = 50, message = "Vilain name must have between 3 and 50 characters")
+    public String name;
+
+    public String otherName;
+
+    @NotNull
+    @Min(1)
+    public int level;
+    public String picture;
+
+    @Column(columnDefinition = "TEXT")
+    public String powers;
+
+    @Override
+    public String toString() {
+        return "Villain{" + "id=" + id + ", name='" + name + '\'' + ", otherName='" + otherName + '\'' + ", level="
+                + level + ", picture='" + picture + '\'' + ", powers='" + powers + '\'' + '}';
+    }
+
+    public static Villain findRandom() {
+        long countVillains = count();
+        Random random = new Random();
+        int randomVillain = random.nextInt((int) countVillains);
+        return findAll().page(randomVillain, 1).firstResult();
+    }
+
+}
