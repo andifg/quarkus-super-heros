@@ -93,6 +93,15 @@ public class VillainResourceTest {
     }
 
     @Test
+    void shouldPingOpenAPI() {
+        given()
+            .header(ACCEPT, JSON)
+            .when().get("/q/openapi")
+            .then()
+            .statusCode(OK.getStatusCode());
+    }
+
+    @Test
     @Order(1)
     void shouldGetInitialItems(){
         List<Villain> villains = get("/api/villains").then()
@@ -100,8 +109,6 @@ public class VillainResourceTest {
                 .contentType(APPLICATION_JSON)
                 .extract().body().as(getVillainTypeRef());
             assertEquals(NB_VILLAINS, villains.size());
-
-
     }
 
 

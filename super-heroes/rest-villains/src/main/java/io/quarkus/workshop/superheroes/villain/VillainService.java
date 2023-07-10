@@ -8,12 +8,17 @@ import jakarta.validation.Valid;
 import static jakarta.transaction.Transactional.TxType.REQUIRED;
 import static jakarta.transaction.Transactional.TxType.SUPPORTS;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
 import java.util.List;
 
 
 @ApplicationScoped
 @Transactional(REQUIRED)
 public class VillainService {
+
+
+    @ConfigProperty(name = "level.multiplier", defaultValue="1.0") double levelMultiplier;
 
     @PostConstruct
     void onStartup() {
@@ -36,6 +41,7 @@ public class VillainService {
     }
 
     public Villain persistVillain(Villain villain) {
+        villain.level = (int) Math.round(villain.level * levelMultiplier);
         Villain.persist(villain);
         return villain;
     }
