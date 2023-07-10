@@ -5,6 +5,12 @@ https://quarkus.io/quarkus-workshops/super-heroes/mac/spine.html
 
 
 
+# Quarkus java build
+
+```bash
+quarkus build
+```
+
 # Quarkus native build without Graal VM
 
 
