@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import io.quarkus.panache.mock.PanacheMock;
+
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import java.util.List;
@@ -42,58 +44,58 @@ public class HeroResourceTest {
 
 
 
-    // @Test
-    // void shouldPingOpenAPI(){
-    //     given()
-    //         .header(ACCEPT, APPLICATION_JSON)
-    //         .when().get("/q/openapi")
-    //         .then()
-    //         .statusCode(OK.getStatusCode());
-    // }
+    @Test
+    void shouldPingOpenAPI(){
+        given()
+            .header(ACCEPT, APPLICATION_JSON)
+            .when().get("/q/openapi")
+            .then()
+            .statusCode(OK.getStatusCode());
+    }
 
-    // @Test
-    // void shouldNotGetUknownHero() {
-    //     Long randomId = new Random().nextLong();
-    //     given()
-    //         .header(ACCEPT, APPLICATION_JSON)
-    //         .pathParam("id", randomId)
-    //         .when().get("/api/heroes/{id}")
-    //         .then()
-    //         .statusCode(NO_CONTENT.getStatusCode());
-    // }
+    @Test
+    void shouldNotGetUknownHero() {
+        Long randomId = new Random().nextLong();
+        given()
+            .header(ACCEPT, APPLICATION_JSON)
+            .pathParam("id", randomId)
+            .when().get("/api/heroes/{id}")
+            .then()
+            .statusCode(NO_CONTENT.getStatusCode());
+    }
 
-    // @Test
-    // void shouldGetRandomHero() {
-    //     given()
-    //         .when().get("/api/heroes/random")
-    //         .then()
-    //         .statusCode(OK.getStatusCode())
-    //         .contentType(APPLICATION_JSON);
-    // }
+    @Test
+    void shouldGetRandomHero() {
+        given()
+            .when().get("/api/heroes/random")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .contentType(APPLICATION_JSON);
+    }
 
-    // @Test
-    // void shouldNotAddInvalidItem() {
-    //     Hero hero = new Hero();
-    //     hero.name = null;
-    //     hero.otherName = DEFAULT_OTHER_NAME;
-    //     hero.picture = DEFAULT_PICTURE;
-    //     hero.powers = DEFAULT_POWERS;
-    //     hero.level = 0;
+    @Test
+    void shouldNotAddInvalidItem() {
+        Hero hero = new Hero();
+        hero.name = null;
+        hero.otherName = DEFAULT_OTHER_NAME;
+        hero.picture = DEFAULT_PICTURE;
+        hero.powers = DEFAULT_POWERS;
+        hero.level = 0;
 
-    //     given()
-    //         .body(hero)
-    //         .header(CONTENT_TYPE, APPLICATION_JSON)
-    //         .header(ACCEPT, APPLICATION_JSON)
-    //         .when()
-    //         .post("/api/heroes")
-    //         .then()
-    //         .statusCode(BAD_REQUEST.getStatusCode());
-    // }
+        given()
+            .body(hero)
+            .header(CONTENT_TYPE, APPLICATION_JSON)
+            .header(ACCEPT, APPLICATION_JSON)
+            .when()
+            .post("/api/heroes")
+            .then()
+            .statusCode(BAD_REQUEST.getStatusCode());
+    }
 
     @Test
     @Order(1)
     void shouldGetInitialItems() {
-        
+
         List<Hero> heroes = get("/api/heroes").then()
             .statusCode(OK.getStatusCode())
             .contentType(APPLICATION_JSON)

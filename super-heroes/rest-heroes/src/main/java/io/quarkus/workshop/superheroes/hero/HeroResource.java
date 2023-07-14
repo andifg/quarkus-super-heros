@@ -1,5 +1,6 @@
 package io.quarkus.workshop.superheroes.hero;
 
+import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction;
 import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -16,6 +17,7 @@ import org.jboss.resteasy.reactive.RestResponse;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
+
 import java.net.URI;
 import java.util.List;
 
@@ -38,16 +40,25 @@ public class HeroResource {
     @GET
     @Path("/random")
     @APIResponse(responseCode = "200", content = @Content(mediaType = APPLICATION_JSON, schema = @Schema(implementation = Hero.class, required = true)))
-    public Uni<Hero> getRandomHero() {
+    public Uni<Response> getRandomHero() {
         return Hero.findRandom()
-            .invoke(h -> logger.debugf("Found random hero: %s", h));
+            .onItem().ifNotNull().transform(h -> {
+                this.logger.debugf("Found random hero: %s", h);
+                return Response.ok(h).build();
+            })
+            .onItem().ifNull().continueWith(() -> {
+                this.logger.debug("No random villain found");
+                return Response.status(Response.Status.NOT_FOUND).build();
+            });
     }
 
     @Operation(summary = "Returns all the heroes from the database")
     @GET
     @APIResponse(responseCode = "200", content = @Content(mediaType = APPLICATION_JSON, schema = @Schema(implementation = Hero.class, type = SchemaType.ARRAY)))
     public Uni<List<Hero>> getAllHeroes() {
-        return Hero.listAll();
+        Uni<List<Hero>> heroes = Hero.listAll();
+        return heroes
+            .invoke(list -> logger.info("Total of heroes " + list.size()));
     }
 
     @Operation(summary = "Returns a hero for a given identifier")

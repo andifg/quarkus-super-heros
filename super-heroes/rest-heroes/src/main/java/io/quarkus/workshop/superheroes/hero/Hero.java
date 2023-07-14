@@ -13,7 +13,7 @@ import java.util.Random;
 
 @Entity
 public class Hero extends PanacheEntity {
- 
+
     @NotNull
     @Size (min = 3, max = 50)
     public String name;
@@ -23,7 +23,7 @@ public class Hero extends PanacheEntity {
     @NotNull
     @Min(1)
     public int level;
-    public String picture;   
+    public String picture;
 
     @Column(columnDefinition = "TEXT")
     public String powers;
